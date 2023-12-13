@@ -60,15 +60,9 @@ require('lazy').setup({
   },
 
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
-
+  -- { 'navarasu/onedark.nvim', },
+  { 'NLKNguyen/papercolor-theme', },
+  -- { 'rebelot/kanagawa.nvim', },
 
   {
     -- Add indentation guides even on blank lines
@@ -80,7 +74,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',      opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -107,7 +101,7 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
-  { "windwp/nvim-autopairs", opts = {} },
+  { "windwp/nvim-autopairs",  opts = {} },
 
   require 'kickstart.plugins.autoformat',
 
@@ -155,6 +149,8 @@ vim.opt.signcolumn = "no"
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+vim.cmd 'colorscheme PaperColor'
 
 -- Remove line
 vim.opt.laststatus = 0
