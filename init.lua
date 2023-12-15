@@ -161,6 +161,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Fix ctrl-c
 vim.keymap.set("i", "<C-c>", "<ESC>")
 
+-- Find and replace with ctrl-x
+vim.keymap.set("v", "<C-x>", "\"hy:%s/<C-r>h//gc<left><left><left>")
+
 -- :Q -> :q
 vim.cmd("cabbrev Q q")
 
@@ -294,6 +297,7 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>s', '<Nop>')
 
 -- [[ Configure Treesitter ]]
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
@@ -486,7 +490,7 @@ mason_lspconfig.setup_handlers {
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
+-- require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
