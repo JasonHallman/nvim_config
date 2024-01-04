@@ -101,7 +101,9 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
-  { "windwp/nvim-autopairs",  opts = {} },
+  { "windwp/nvim-autopairs", opts = {} },
+
+  { "godlygeek/tabular" },
 
   require 'kickstart.plugins.autoformat',
 
@@ -537,6 +539,102 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+
+
+-- function AlignAssignmentBlocks()
+--   local start = nil
+--   local in_block = false
+--   local parenthesis_depth = 0
+--
+--   for i = 1, vim.api.nvim_buf_line_count(0) do
+--     local line = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+--
+--     -- Update the depth of nested parentheses
+--     for char in line:gmatch(".") do
+--       if char == "(" then
+--         parenthesis_depth = parenthesis_depth + 1
+--       elseif char == ")" then
+--         parenthesis_depth = math.max(0, parenthesis_depth - 1)
+--       end
+--     end
+--
+--     -- Check for '=' outside of parentheses
+--     if line:find("=") and parenthesis_depth == 0 then
+--       if not in_block then
+--         start = i
+--         in_block = true
+--       end
+--     else
+--       if in_block and parenthesis_depth == 0 then
+--         vim.api.nvim_command(start .. "," .. i - 1 .. "Tabularize /=")
+--         in_block = false
+--       end
+--     end
+--   end
+
+
+-- function AlignAssignmentBlocks()
+--   local start = nil
+--   local in_block = false
+--   local parenthesis_depth = 0
+--
+--   for i = 1, vim.api.nvim_buf_line_count(0) do
+--     local line = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+--     for char in line:gmatch(".") do
+--       if char == "(" then
+--         parenthesis_depth = parenthesis_depth + 1
+--       elseif char == ")" then
+--         parenthesis_depth = math.max(0, parenthesis_depth - 1)
+--       elseif char == "=" and parenthesis_depth == 0 then
+--         if not in_block then
+--           start = i
+--           in_block = true
+--         else
+--           if start < i - 1 then
+--             vim.api.nvim_command(start .. "," .. i - 1 .. "Tabularize /=")
+--           end
+--           in_block = false
+--         end
+--       end
+--     end
+--
+--     -- if in_block then
+--     --   vim.api.nvim_command(start .. "," .. vim.api.nvim_buf_line_count(0) .. "Tabularize /=")
+--     -- end
+--   end
+-- end
+
+
+function AlignAssignmentBlocks()
+  local start = nil
+  local in_block = false
+
+  for i = 1, vim.api.nvim_buf_line_count(0) do
+    local line = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+    line = line:gsub("%b()", ""):gsub("%(.*", ""):gsub(".*%)", "")
+
+    if line:find("=") and not line:find("%[") and not line:find("%]") then
+      if not in_block then
+        start = i
+        in_block = true
+      end
+    else
+      if in_block and start ~= i - 1 then
+        vim.api.nvim_command(start .. "," .. i - 1 .. "Tabularize /=")
+      end
+      in_block = false
+    end
+  end
+end
+
+vim.api.nvim_create_user_command('MyCommand', AlignAssignmentBlocks, {})
+
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = "*.py",
+--   callback = AlignAssignmentBlocks
+-- })
+--
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
