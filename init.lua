@@ -467,6 +467,8 @@ local servers = {
   -- clangd = {},
   gopls = {},
   pyright = {},
+  terraform_ls = {},
+  tflint = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
