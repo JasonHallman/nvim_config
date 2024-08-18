@@ -18,11 +18,6 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
 require('lazy').setup({
-
-  -- Git related plugins
-  -- 'tpope/vim-fugitive',
-  -- 'tpope/vim-rhubarb',
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
@@ -33,11 +28,6 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-
-      -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
@@ -67,8 +57,6 @@ require('lazy').setup({
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
     main = 'ibl',
     opts = {},
   },
@@ -140,8 +128,6 @@ vim.o.mouse = 'a'
 vim.g.netrw_silent = true
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
@@ -390,10 +376,6 @@ end, 0)
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
@@ -513,10 +495,10 @@ local lspconfig = require('lspconfig')
 
 -- Define the setup for tflint
 lspconfig.tflint.setup {
-  on_attach = on_attach, -- assuming you have an on_attach function defined as shown in your config
-  capabilities = capabilities, -- as previously set up in your LSP config
+  on_attach = on_attach,                         -- assuming you have an on_attach function defined as shown in your config
+  capabilities = capabilities,                   -- as previously set up in your LSP config
   filetypes = { 'terraform', 'terraform-vars' }, -- specify the file types to trigger tflint
-  cmd = {"tflint", "--langserver"}, -- command to start tflint LSP server
+  cmd = { "tflint", "--langserver" },            -- command to start tflint LSP server
   init_options = {
     -- Include any initialization options here if needed
   }
@@ -524,21 +506,25 @@ lspconfig.tflint.setup {
 
 -- Define the setup for terraform-ls
 lspconfig.terraformls.setup {
-  on_attach = on_attach, -- Use your existing on_attach function
-  capabilities = capabilities, -- Use your existing enhanced capabilities
+  on_attach = on_attach,                         -- Use your existing on_attach function
+  capabilities = capabilities,                   -- Use your existing enhanced capabilities
   filetypes = { 'terraform', 'terraform-vars' }, -- Specify the file types to trigger terraform-ls
-  cmd = {"terraform-ls", "serve"}, -- Command to start the terraform language server
+  cmd = { "terraform-ls", "serve" },             -- Command to start the terraform language server
   settings = {
     terraform = {
       format = {
         enabled = true, -- Enable or disable automatic formatting
-        onSave = true  -- Enable formatting on save
+        onSave = true   -- Enable formatting on save
       }
     }
   }
 }
 
-require'lspconfig'.nginx_language_server.setup{}
+require 'lspconfig'.nginx_language_server.setup {}
+
+require 'lspconfig'.bashls.setup {}
+
+
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
