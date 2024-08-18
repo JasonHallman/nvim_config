@@ -466,21 +466,21 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   gopls = {},
-  pyright = {},
-  terraform_ls = {},
-  tflint = {},
+  -- pyright = {},
+  -- terraform_ls = {},
+  -- tflint = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
-    },
-  },
+  -- lua_ls = {
+  --   Lua = {
+  --     workspace = { checkThirdParty = false },
+  --     telemetry = { enable = false },
+  --     -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+  --     -- diagnostics = { disable = { 'missing-fields' } },
+  --   },
+  -- },
 }
 
 -- Setup neovim lua configuration
@@ -507,6 +507,38 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+-- LSP configuration for tflint
+local lspconfig = require('lspconfig')
+
+-- Define the setup for tflint
+lspconfig.tflint.setup {
+  on_attach = on_attach, -- assuming you have an on_attach function defined as shown in your config
+  capabilities = capabilities, -- as previously set up in your LSP config
+  filetypes = { 'terraform', 'terraform-vars' }, -- specify the file types to trigger tflint
+  cmd = {"tflint", "--langserver"}, -- command to start tflint LSP server
+  init_options = {
+    -- Include any initialization options here if needed
+  }
+}
+
+-- Define the setup for terraform-ls
+lspconfig.terraformls.setup {
+  on_attach = on_attach, -- Use your existing on_attach function
+  capabilities = capabilities, -- Use your existing enhanced capabilities
+  filetypes = { 'terraform', 'terraform-vars' }, -- Specify the file types to trigger terraform-ls
+  cmd = {"terraform-ls", "serve"}, -- Command to start the terraform language server
+  settings = {
+    terraform = {
+      format = {
+        enabled = true, -- Enable or disable automatic formatting
+        onSave = true  -- Enable formatting on save
+      }
+    }
+  }
+}
+
+require'lspconfig'.nginx_language_server.setup{}
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
